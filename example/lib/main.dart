@@ -50,7 +50,8 @@ class _MainAppState extends State<MainApp> {
               height: 0,
             ),
             ListTile(
-              title: Column(
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Note Count',
@@ -74,7 +75,8 @@ class _MainAppState extends State<MainApp> {
               height: 0,
             ),
             ListTile(
-              title: Column(
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Height',
@@ -99,7 +101,8 @@ class _MainAppState extends State<MainApp> {
             ),
             ListTile(
               enabled: !expand,
-              title: Column(
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Width',
