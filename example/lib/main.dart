@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_piano_pro/flutter_piano_pro.dart';
+import 'package:flutter_piano_pro/note_model.dart';
+import 'package:flutter_piano_pro/note_names.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,12 +19,19 @@ class _MainAppState extends State<MainApp> {
   double width = 250;
   double height = 250;
   bool expand = true;
-  NoteNames firstNote = NoteNames.noteDo;
-
+  int firstNote = 0;
+  int firstNoteOctave = 0;
+  NoteType noteType = NoteType.english;
   bool showNames = true;
+
+  onPressed(NoteModel note) {
+    print(note.toString());
+    print(note.midiNoteNumber);
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<String> noteNames = NoteNames.generate(noteType);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.brown),
@@ -31,19 +40,52 @@ class _MainAppState extends State<MainApp> {
         body: ListView(
           children: [
             ListTile(
+              title: const Text('Note Names'),
+              trailing: SizedBox(
+                width: 250,
+                child: DropdownButton(
+                    value: noteType,
+                    items: List.generate(NoteType.values.length, (index) {
+                      return DropdownMenuItem(
+                          value: NoteType.values[index],
+                          child: Text(NoteNames.generate(NoteType.values[index])
+                              .toString()));
+                    }),
+                    onChanged: (value) => setState(() => noteType = value!)),
+              ),
+            ),
+            const Divider(
+              height: 0,
+            ),
+            ListTile(
               title: const Text('First Note'),
               trailing: SizedBox(
                 width: 250,
                 child: DropdownButton(
                     value: firstNote,
-                    items: List.generate(NoteNames.values.length, (index) {
+                    items: List.generate(noteNames.length, (index) {
                       return DropdownMenuItem(
-                          value: NoteNames.values[index],
-                          child: Text(NoteNames.values[index]
-                              .toString()
-                              .split('.note')[1]));
+                          value: index,
+                          child: Text(noteNames[index].toString()));
                     }),
                     onChanged: (value) => setState(() => firstNote = value!)),
+              ),
+            ),
+            const Divider(
+              height: 0,
+            ),
+            ListTile(
+              title: const Text('First Note Octave'),
+              trailing: SizedBox(
+                width: 250,
+                child: DropdownButton(
+                    value: firstNoteOctave,
+                    items: List.generate(noteNames.length, (index) {
+                      return DropdownMenuItem(
+                          value: index, child: Text(index.toString()));
+                    }),
+                    onChanged: (value) =>
+                        setState(() => firstNoteOctave = value!)),
               ),
             ),
             const Divider(
@@ -140,10 +182,13 @@ class _MainAppState extends State<MainApp> {
               height: 20,
             ),
             PianoPro.pianoWidget(
+                onPressed: onPressed,
+                noteType: noteType,
                 showNames: showNames,
                 expandHorizontal: expand,
                 totalWidth: width,
                 firstNote: firstNote,
+                firstNoteOctave: firstNoteOctave,
                 buttonHeight: height,
                 buttonCount: noteCount.round().toInt()),
           ],

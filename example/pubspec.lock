@@ -65,11 +65,10 @@ packages:
   flutter_piano_pro:
     dependency: "direct main"
     description:
-      name: flutter_piano_pro
-      sha256: "3ba784abf3e7da46d947b396fe6924486ae20929b90ced80dc06a462acc15df4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.1.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter

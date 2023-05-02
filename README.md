@@ -14,49 +14,78 @@ Add `flutter_piano_pro` as a dependency in your pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_piano_pro: ^0.1.3
+  flutter_piano_pro: ^0.1.4
 ```
 
 ## Usage
 
-To use the piano widget, import `flutter_piano_pro` and use the `pianoWidget` method:
+Import `flutter_piano_pro.dart` and `note_names.dart` files:
 
 ```dart
 import 'package:flutter_piano_pro/flutter_piano_pro.dart';
+import 'package:flutter_piano_pro/note_names.dart';
+```
 
-class MyHomePage extends StatelessWidget {
+In your widget tree, use the `pianoWidget` method to add the piano:
+
+```dart
+PianoPro.pianoWidget(
+    buttonCount: 25,
+    totalWidth: 500,
+    buttonHeight: 100,
+    showNames: true,
+    firstNote: 0,
+    noteType: NoteType.romance,
+),
+```
+
+This method takes in several parameters:
+
+- `buttonCount` (required): The number of keys/buttons in the piano.
+- `totalWidth` (optional): The width of the piano. If not provided, the piano will take up the full width of its parent.
+- `expandHorizontal` (optional, default: `true`): Whether or not to expand horizontally to fill available space.
+- `buttonHeight` (optional, default: `250`): The height of the piano keys/buttons.
+- `showNames` (optional, default: `true`): Whether or not to show the note names on the keys.
+- `firstNote` (optional, default: `0`): The index of the first note to show.
+- `noteType` (optional, default: `NoteType.romance`): The type of notes to show. Four types are available: `NoteType.english`, `NoteType.german`, `NoteType.romance`, and `NoteType.romance2`.
+
+## Example
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_piano_pro/flutter_piano_pro.dart';
+import 'package:flutter_piano_pro/note_names.dart';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Piano Pro Example'),
-      ),
-      body: Center(
-        child: PianoPro.pianoWidget(
-          buttonCount: 14,
-          expandHorizontal: true,
-          buttonHeight: 250,
-          showNames: true,
-          firstNote: NoteNames.noteDo,
+    return MaterialApp(
+      title: 'Flutter Piano Pro Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flutter Piano Pro'),
+        ),
+        body: Center(
+          child: PianoPro.pianoWidget(
+            buttonCount: 25,
+            totalWidth: 500,
+            buttonHeight: 100,
+            showNames: true,
+            firstNote: 0,
+            noteType: NoteType.romance,
+          ),
         ),
       ),
     );
   }
 }
 ```
-
-## Customization Options
-
-The `pianoWidget` method accepts the following parameters:
-
-| Parameter        | Type        | Default            | Description                                                                                                                                                              |
-| ---------------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| buttonCount      | `int`       | Required           | Number of white keys to display                                                                                                                                          |
-| totalWidth       | `double?`   | null               | Total width of the piano. Defaults to maximum width available                                                                                                            |
-| expandHorizontal | `bool`      | true               | Determines whether the piano should expand horizontally to fill available space                                                                                          |
-| buttonHeight     | `double`    | 250                | Height of the white keys                                                                                                                                                 |
-| showNames        | `bool`      | true               | Determines whether the note names should be displayed                                                                                                                    |
-| firstNote        | `NoteNames` | `NoteNames.noteDo` | The first note to display. Other options are `NoteNames.noteRe`, `NoteNames.noteMi`, `NoteNames.noteFa`, `NoteNames.noteSol`, `NoteNames.noteLa`, and `NoteNames.noteSi` |
 
 ## Contributions
 
