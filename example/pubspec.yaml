@@ -1,6 +1,5 @@
 name: example
-description: A new Flutter project.
-publish_to: "none"
+description: flutter_piano_pro is a Flutter package that provides a customizable piano widget.
 version: 0.1.0
 
 environment:
