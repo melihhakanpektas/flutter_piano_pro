@@ -6,7 +6,7 @@
 
 A Flutter widget package to generate a piano with customizable options.
 
-![Example image of Flutter Piano Pro](https://github.com/MelihHakanPektas/flutter_piano_pro/raw/main/screenshots/example.png)
+![Flutter Piano Pro Example](https://github.com/MelihHakanPektas/flutter_piano_pro/raw/master/assets/flutter_piano_pro.gif)
 
 ## Installation
 
