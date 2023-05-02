@@ -1,6 +1,6 @@
 name: example
 description: flutter_piano_pro is a Flutter package that provides a customizable piano widget.
-version: 0.1.0
+version: 0.1.3
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_piano_pro: ^0.1.0
+  flutter_piano_pro: ^0.1.3
 
 dev_dependencies:
   flutter_test:

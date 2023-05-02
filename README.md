@@ -14,7 +14,7 @@ Add `flutter_piano_pro` as a dependency in your pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_piano_pro: ^0.1.0
+  flutter_piano_pro: ^0.1.3
 ```
 
 ## Usage
@@ -61,6 +61,14 @@ The `pianoWidget` method accepts the following parameters:
 ## Contributions
 
 Contributions are welcome! Please feel free to submit a PR or open an issue.
+
+### Contact
+
+If you have any questions or suggestions, feel free to contact the package maintainer, Melih Hakan Pektas, via email or through GitHub.
+
+![Melih Hakan Pektas](https://avatars.githubusercontent.com/u/79354366)
+
+Thank you for contributing to flutter_piano_pro!
 
 ## License
 

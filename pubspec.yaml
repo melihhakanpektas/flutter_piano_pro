@@ -1,6 +1,6 @@
 name: flutter_piano_pro
 description: flutter_piano_pro is a Flutter package that provides a customizable piano widget.
-version: 0.1.0
+version: 0.1.3
 homepage: https://github.com/MelihHakanPektas/flutter_piano_pro
 
 environment:
