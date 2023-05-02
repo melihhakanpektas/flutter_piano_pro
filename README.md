@@ -14,7 +14,7 @@ Add `flutter_piano_pro` as a dependency in your pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_piano_pro: ^1.0.0
+  flutter_piano_pro: ^0.1.0
 ```
 
 ## Usage
