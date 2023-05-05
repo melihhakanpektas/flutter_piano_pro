@@ -1,21 +1,24 @@
 name: example
-description: flutter_piano_pro is a Flutter package that provides a customizable piano widget.
-version: 0.1.4
-publish: none
+description: flutter_piano_pro is a Flutter package that provides a customizable
+  piano widget.
+version: 0.2.0
+publish_to: none
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
+  audioplayers: ^4.0.1
   flutter:
     sdk: flutter
-  flutter_piano_pro:
-    path: ../
+  flutter_piano_pro: ^0.2.0
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/piano_sounds/
