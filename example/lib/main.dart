@@ -1,10 +1,5 @@
-import 'dart:convert';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_piano_pro/flutter_piano_pro.dart';
-import 'package:flutter_piano_pro/note_model.dart';
 import 'package:flutter_piano_pro/note_names.dart';
 
 void main() {
@@ -28,41 +23,10 @@ class _MainAppState extends State<MainApp> {
   NoteType noteType = NoteType.english;
   bool showNames = true;
   bool showOctaveNumbers = true;
-  AudioCache audioCache = AudioCache(prefix: "assets/piano_sounds/");
-  Map<int, AudioPlayer> audios = {};
   Map<int, int> pointerNoteNumber = {};
-
-  Future loadCache() async {
-    var folderPath = 'assets/piano_sounds/';
-    var manifestContent = await rootBundle.loadString('AssetManifest.json');
-    var manifestMap = json.decode(manifestContent);
-    List<String> fileNames = manifestMap.keys
-        .where((String key) => key.startsWith(folderPath))
-        .map((String key) => key.replaceAll(folderPath, ''))
-        .toList()
-        .cast<String>();
-    audioCache.loadAll(fileNames);
-  }
 
   @override
   void initState() {
-    for (var i = 0; i < 116; i++) {
-      var noteIndex = (i) % 7;
-      var octave = (((i) / 7).floor()).toInt();
-      var note = NoteModel(
-          name: NoteNames.generate(noteType)[noteIndex],
-          octave: octave,
-          noteIndex: noteIndex,
-          isFlat: false);
-
-      if (![0, 3].contains(noteIndex)) {
-        var flatNote = note.copyWith(isFlat: true);
-        audios[flatNote.midiNoteNumber] = AudioPlayer()
-          ..audioCache = audioCache;
-      }
-      audios[note.midiNoteNumber] = AudioPlayer()..audioCache = audioCache;
-    }
-    loadCache();
     super.initState();
   }
 
@@ -251,10 +215,6 @@ class _MainAppState extends State<MainApp> {
             PianoPro(
                 onTapDown: (note, pointer) {
                   if (note == null) return;
-                  pointerNoteNumber[pointer] = note.midiNoteNumber;
-                  audios[note.midiNoteNumber]!.stop();
-                  audios[note.midiNoteNumber]!
-                      .play(AssetSource('0-${note.midiNoteNumber}.mp3'));
                 },
                 onTapUpdate: (note, pointer) {
                   if (note == null) return;
@@ -262,9 +222,8 @@ class _MainAppState extends State<MainApp> {
                   if (pointerNoteNumber.containsKey(pointer) &&
                       pointerNoteNumber[pointer] == note.midiNoteNumber) return;
                   pointerNoteNumber[pointer] = note.midiNoteNumber;
-                  audios[note.midiNoteNumber]!.stop();
-                  audios[note.midiNoteNumber]!
-                      .play(AssetSource('0-${note.midiNoteNumber}.mp3'));
+                  //stop note midinumber
+                  //play midi
                 },
                 noteType: noteType,
                 showNames: showNames,

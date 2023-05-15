@@ -8,10 +8,11 @@ environment:
   sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
-  audioplayers: ^4.0.1
+  flutter_midi_pro: ^1.0.4
   flutter:
     sdk: flutter
-  flutter_piano_pro: ^0.2.0
+  flutter_piano_pro:
+    path: ../
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -21,4 +22,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/piano_sounds/
+    - assets/
