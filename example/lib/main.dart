@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_midi_pro/flutter_midi_pro.dart';
 import 'package:flutter_piano_pro/flutter_piano_pro.dart';
+import 'package:flutter_piano_pro/note_model.dart';
 import 'package:flutter_piano_pro/note_names.dart';
 
 void main() {
@@ -23,10 +25,22 @@ class _MainAppState extends State<MainApp> {
   NoteType noteType = NoteType.english;
   bool showNames = true;
   bool showOctaveNumbers = true;
-  Map<int, int> pointerNoteNumber = {};
+  Map<int, NoteModel> pointerAndNote = {};
+  String sf2Path = 'assets/tight_piano.sf2';
+  final _midi = MidiPro();
+  bool isTouchingToPiano = false;
+
+  void play(int midi, {int velocity = 127}) {
+    _midi.playMidiNote(midi: midi, velocity: velocity);
+  }
+
+  void stop(int midi) {
+    _midi.stopMidiNote(midi: midi);
+  }
 
   @override
   void initState() {
+    _midi.loadSoundfont(sf2Path: sf2Path);
     super.initState();
   }
 
@@ -39,6 +53,8 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         appBar: AppBar(title: const Text('Flutter Piano Pro')),
         body: ListView(
+          physics:
+              isTouchingToPiano ? const NeverScrollableScrollPhysics() : null,
           children: [
             ListTile(
               title: const Text('Note Names'),
@@ -213,17 +229,28 @@ class _MainAppState extends State<MainApp> {
               ],
             ),
             PianoPro(
-                onTapDown: (note, pointer) {
+                onTapDown: (NoteModel? note, int tapId) {
                   if (note == null) return;
+                  isTouchingToPiano = true;
+                  play(note.midiNoteNumber);
+                  setState(() => pointerAndNote[tapId] = note);
+                  debugPrint(
+                      'DOWN: note= ${note.name + note.octave.toString() + (note.isFlat ? "♭" : '')}, tapId= $tapId');
                 },
-                onTapUpdate: (note, pointer) {
+                onTapUpdate: (NoteModel? note, int tapId) {
                   if (note == null) return;
-
-                  if (pointerNoteNumber.containsKey(pointer) &&
-                      pointerNoteNumber[pointer] == note.midiNoteNumber) return;
-                  pointerNoteNumber[pointer] = note.midiNoteNumber;
-                  //stop note midinumber
-                  //play midi
+                  if (pointerAndNote[tapId] == note) return;
+                  stop(pointerAndNote[tapId]!.midiNoteNumber);
+                  play(note.midiNoteNumber);
+                  setState(() => pointerAndNote[tapId] = note);
+                  debugPrint(
+                      'UPDATE: note= ${note.name + note.octave.toString() + (note.isFlat ? "♭" : '')}, tapId= $tapId');
+                },
+                onTapUp: (int tapId) {
+                  stop(pointerAndNote[tapId]!.midiNoteNumber);
+                  setState(() => pointerAndNote.remove(tapId));
+                  debugPrint('UP: tapId= $tapId');
+                  if (pointerAndNote.isEmpty) isTouchingToPiano = false;
                 },
                 noteType: noteType,
                 showNames: showNames,
@@ -233,6 +260,7 @@ class _MainAppState extends State<MainApp> {
                 firstNote: firstNote,
                 firstNoteOctave: firstNoteOctave,
                 buttonHeight: height,
+                extraBlackButtonWidth: 15,
                 noteCount: noteCount.round().toInt()),
           ],
         ),

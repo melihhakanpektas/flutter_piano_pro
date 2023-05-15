@@ -8,7 +8,7 @@ environment:
   sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
-  flutter_midi_pro: ^1.0.4
+  flutter_midi_pro: ^1.0.5
   flutter:
     sdk: flutter
   flutter_piano_pro:

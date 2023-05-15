@@ -19,6 +19,7 @@ class PianoPro extends StatefulWidget {
     this.onTapDown,
     this.onTapUpdate,
     this.onTapUp,
+    this.extraBlackButtonWidth = 0,
   });
 
   final int noteCount;
@@ -30,6 +31,7 @@ class PianoPro extends StatefulWidget {
   final int firstNote;
   final int firstNoteOctave;
   final NoteType noteType;
+  final double extraBlackButtonWidth;
   final Function(NoteModel? note, int pointer)? onTapDown;
   final Function(NoteModel? note, int pointer)? onTapUpdate;
   final Function(int pointer)? onTapUp;
@@ -57,7 +59,8 @@ class _PianoProState extends State<PianoPro> {
           ? constraits.maxWidth
           : widget.totalWidth ?? constraits.maxWidth;
       final whiteButtonWidth = maxWidth / widget.noteCount;
-      final blackButtonWidth = whiteButtonWidth / 2;
+      final blackButtonWidth =
+          whiteButtonWidth / 2 + widget.extraBlackButtonWidth;
       var whiteButtonHeight = widget.buttonHeight;
       if (constraits.maxHeight < widget.buttonHeight) {
         whiteButtonHeight = constraits.maxHeight;
