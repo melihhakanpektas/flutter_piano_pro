@@ -11,7 +11,8 @@
 - Diffrent note names added.
 - Piano buttons callback added.
 
-## 1.0.0
+## 0.3.0
 
 - Black button width added
 - Example sound method changed
+- Scrollbar added
