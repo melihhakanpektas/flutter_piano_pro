@@ -18,6 +18,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   double noteCount = 7;
   double width = 300;
+  double buttonWidthRatio = 2;
   double height = 250;
   bool expand = true;
   int firstNote = 0;
@@ -28,7 +29,6 @@ class _MainAppState extends State<MainApp> {
   Map<int, NoteModel> pointerAndNote = {};
   String sf2Path = 'assets/tight_piano.sf2';
   final _midi = MidiPro();
-  bool isTouchingToPiano = false;
 
   void play(int midi, {int velocity = 127}) {
     _midi.playMidiNote(midi: midi, velocity: velocity);
@@ -53,8 +53,7 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         appBar: AppBar(title: const Text('Flutter Piano Pro')),
         body: ListView(
-          physics:
-              isTouchingToPiano ? const NeverScrollableScrollPhysics() : null,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             ListTile(
               title: const Text('Note Names'),
@@ -165,6 +164,33 @@ class _MainAppState extends State<MainApp> {
             const Divider(
               height: 0,
             ),
+            ListTile(
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Black Button\nWidth Ratio',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(buttonWidthRatio.toStringAsFixed(2)),
+                ],
+              ),
+              trailing: SizedBox(
+                width: 250,
+                child: Slider(
+                  divisions: 40,
+                  max: 3,
+                  min: 1,
+                  value: buttonWidthRatio,
+                  onChanged: (value) =>
+                      setState(() => buttonWidthRatio = value),
+                ),
+              ),
+            ),
+            const Divider(
+              height: 0,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -231,37 +257,30 @@ class _MainAppState extends State<MainApp> {
             PianoPro(
                 onTapDown: (NoteModel? note, int tapId) {
                   if (note == null) return;
-                  isTouchingToPiano = true;
                   play(note.midiNoteNumber);
-                  setState(() => pointerAndNote[tapId] = note);
-                  debugPrint(
-                      'DOWN: note= ${note.name + note.octave.toString() + (note.isFlat ? "♭" : '')}, tapId= $tapId');
+                  pointerAndNote[tapId] = note;
                 },
                 onTapUpdate: (NoteModel? note, int tapId) {
                   if (note == null) return;
                   if (pointerAndNote[tapId] == note) return;
                   stop(pointerAndNote[tapId]!.midiNoteNumber);
                   play(note.midiNoteNumber);
-                  setState(() => pointerAndNote[tapId] = note);
-                  debugPrint(
-                      'UPDATE: note= ${note.name + note.octave.toString() + (note.isFlat ? "♭" : '')}, tapId= $tapId');
+                  pointerAndNote[tapId] = note;
                 },
                 onTapUp: (int tapId) {
                   stop(pointerAndNote[tapId]!.midiNoteNumber);
-                  setState(() => pointerAndNote.remove(tapId));
-                  debugPrint('UP: tapId= $tapId');
-                  if (pointerAndNote.isEmpty) isTouchingToPiano = false;
+                  pointerAndNote.remove(tapId);
                 },
                 noteType: noteType,
                 showNames: showNames,
-                showOctaveNumber: showOctaveNumbers,
-                expandHorizontal: expand,
-                totalWidth: width,
-                firstNote: firstNote,
-                firstNoteOctave: firstNoteOctave,
-                buttonHeight: height,
-                extraBlackButtonWidth: 15,
-                noteCount: noteCount.round().toInt()),
+                showOctave: showOctaveNumbers,
+                expand: expand,
+                width: width,
+                first: firstNote,
+                firstOctave: firstNoteOctave,
+                height: height,
+                ratio: buttonWidthRatio,
+                count: noteCount.round().toInt()),
           ],
         ),
       ),
