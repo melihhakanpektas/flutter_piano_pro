@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_piano_pro/note_names.dart';
+
 class NoteModel {
   final String name;
   final int octave;
@@ -12,8 +14,56 @@ class NoteModel {
     required this.isFlat,
   });
 
+  factory NoteModel.fromMidiNoteNumber(int midiNoteNumber, NoteType noteType) {
+    final noteNames = NoteNames.generate(noteType);
+    final octave = (midiNoteNumber ~/ 12) - 1;
+    int noteIndexWithFlats = midiNoteNumber % 12;
+    final flatIndexes = [1, 3, 6, 8, 10];
+    final isFlat = flatIndexes.contains(noteIndexWithFlats);
+    if (isFlat) ++noteIndexWithFlats;
+    int noteIndex = 0;
+    String name = '';
+    switch (noteIndexWithFlats) {
+      case 0:
+        noteIndex = 0;
+        break;
+      case 2:
+        noteIndex = 1;
+        break;
+      case 4:
+        noteIndex = 2;
+        break;
+      case 5:
+        noteIndex = 3;
+        break;
+      case 7:
+        noteIndex = 4;
+        break;
+      case 9:
+        noteIndex = 5;
+        break;
+      case 11:
+        noteIndex = 6;
+        break;
+      default:
+        noteIndex = 0;
+        break;
+    }
+    if (isFlat) {
+      name = "${noteNames[noteIndex - 1]}♯\n${noteNames[noteIndex]}♭";
+    } else {
+      name = noteNames[noteIndex];
+    }
+    return NoteModel(
+      name: name,
+      octave: octave,
+      noteIndex: noteIndex,
+      isFlat: isFlat,
+    );
+  }
+
   int get midiNoteNumber {
-    int baseNoteNumber = octave * 12 + 12;
+    int baseNoteNumber = 12 + octave * 12;
     if (isFlat) {
       switch (noteIndex) {
         case 1: // Db/C#
