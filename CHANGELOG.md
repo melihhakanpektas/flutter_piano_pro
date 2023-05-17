@@ -16,3 +16,8 @@
 - Black button width added
 - Example sound method changed
 - Scrollbar added
+
+## 0.4.0
+
+- Octave number fixed
+- midiNoteNumber to NoteModel added
