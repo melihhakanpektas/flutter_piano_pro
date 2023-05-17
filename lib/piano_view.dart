@@ -40,7 +40,6 @@ class PianoView extends StatelessWidget {
             (i) {
               var index = i + firstNote;
               var octaveCounter = i == 0 ? 0 : (index / 7).floor();
-              if (index % 7 == 0 && i != 0) ++octaveCounter;
               var currentNote = NoteModel(
                   name: noteNames[index % 7],
                   octave: firstNoteOctave + octaveCounter,
