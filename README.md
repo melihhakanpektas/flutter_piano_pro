@@ -6,7 +6,7 @@
 
 Flutter Piano Pro is a piano widget for flutter applications. It provides a configurable keyboard interface, allowing users to interact with piano notes and receive event callbacks for their interactions.
 
-![Flutter Piano Pro Example](https://github.com/MelihHakanPektas/flutter_piano_pro/raw/master/assets/flutter_piano_pro.gif)
+![Flutter Piano Pro Example](https://github.com/MelihHakanPektas/flutter_piano_pro/raw/master/assets/screenshot.png)
 
 ## Installation
 

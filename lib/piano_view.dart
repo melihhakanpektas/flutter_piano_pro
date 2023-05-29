@@ -31,7 +31,7 @@ class PianoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var noteNames = NoteNames.generate(noteType);
+    var noteNames = noteType.notes;
     return Stack(
       children: [
         Row(children: [

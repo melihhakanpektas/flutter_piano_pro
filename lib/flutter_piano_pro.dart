@@ -84,7 +84,7 @@ class PianoPro extends StatelessWidget {
       bool isFlat = false;
       if (offset.dy >= bButtonH) {
         return NoteModel(
-            name: NoteNames.generate(noteType)[noteIndex],
+            name: noteType.notes[noteIndex],
             octave: octave,
             noteIndex: noteIndex,
             isFlat: false);
@@ -112,7 +112,7 @@ class PianoPro extends StatelessWidget {
         }
 
         return NoteModel(
-            name: NoteNames.generate(noteType)[noteIndex],
+            name: noteType.notes[noteIndex],
             octave: octave,
             noteIndex: noteIndex,
             isFlat: isFlat);

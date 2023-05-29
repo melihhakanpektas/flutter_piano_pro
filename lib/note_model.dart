@@ -15,7 +15,7 @@ class NoteModel {
   });
 
   factory NoteModel.fromMidiNoteNumber(int midiNoteNumber, NoteType noteType) {
-    final noteNames = NoteNames.generate(noteType);
+    final noteNames = noteType.notes;
     final octave = (midiNoteNumber ~/ 12) - 1;
     int noteIndexWithFlats = midiNoteNumber % 12;
     final flatIndexes = [1, 3, 6, 8, 10];

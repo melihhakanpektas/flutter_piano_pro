@@ -46,7 +46,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> noteNames = NoteNames.generate(noteType);
+    List<String> noteNames = noteType.notes;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.brown),
@@ -64,8 +64,7 @@ class _MainAppState extends State<MainApp> {
                     items: List.generate(NoteType.values.length, (index) {
                       return DropdownMenuItem(
                           value: NoteType.values[index],
-                          child: Text(NoteNames.generate(NoteType.values[index])
-                              .toString()));
+                          child: Text(NoteType.values[index].notes.toString()));
                     }),
                     onChanged: (value) => setState(() => noteType = value!)),
               ),
