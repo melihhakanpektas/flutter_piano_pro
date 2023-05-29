@@ -280,6 +280,7 @@ class _MainAppState extends State<MainApp> {
                 firstOctave: firstNoteOctave,
                 whiteHeight: height,
                 blackWidthRatio: buttonWidthRatio,
+                scrollController: ScrollController(),
                 noteCount: noteCount.round().toInt()),
           ],
         ),

@@ -7,9 +7,10 @@ import 'package:flutter_piano_pro/note_names.dart';
 import 'package:flutter_piano_pro/piano_scrollbar.dart';
 import 'package:flutter_piano_pro/piano_view.dart';
 
-class PianoPro extends StatefulWidget {
-  const PianoPro({
+class PianoPro extends StatelessWidget {
+  PianoPro({
     super.key,
+    this.scrollController,
     this.noteCount = 7,
     this.whiteWidth = 300,
     this.expand = true,
@@ -37,53 +38,40 @@ class PianoPro extends StatefulWidget {
   final NoteType noteType;
   final double blackWidthRatio;
   final double scrollHeight;
+  final ScrollController? scrollController;
   final Function(NoteModel? note, int pointer)? onTapDown;
   final Function(NoteModel? note, int pointer)? onTapUpdate;
   final Function(int pointer)? onTapUp;
 
-  @override
-  State<PianoPro> createState() => _PianoProState();
-}
-
-class _PianoProState extends State<PianoPro> {
-  List<int> noFlatIndexes = [0, 3];
-  bool isPressed = false;
-  var scrollPosition = 0.0;
-
-  late List<String> noteNames;
-
-  ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final List<int> noFlatIndexes = [0, 3];
+  final bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    noteNames = NoteNames.generate(widget.noteType);
+    final scroll = scrollController ?? ScrollController();
     return LayoutBuilder(builder: (context, constraits) {
-      if (widget.expand || widget.whiteWidth <= constraits.maxWidth) {
-        return pianoWidget(constraits.biggest, false, false);
+      if (expand || whiteWidth <= constraits.maxWidth) {
+        return pianoWidget(constraits.biggest, false, false, scroll);
       } else {
         return Column(
           children: [
-            pianoWidget(constraits.biggest, false, true),
-            pianoWidget(constraits.biggest, true, false)
+            pianoWidget(constraits.biggest, false, true, scroll),
+            pianoWidget(constraits.biggest, true, false, scroll)
           ],
         );
       }
     });
   }
 
-  Widget pianoWidget(Size constraints, bool isScrollable, bool forScrollBar) {
+  Widget pianoWidget(Size constraints, bool isScrollable, bool forScrollBar,
+      ScrollController scroll) {
     final pianoWidth =
-        widget.expand || forScrollBar ? constraints.width : (widget.whiteWidth);
-    final wButtonW = pianoWidth / widget.noteCount;
-    final bButtonW = wButtonW / widget.blackWidthRatio;
-    var wButtonH = (forScrollBar ? widget.scrollHeight : widget.whiteHeight) -
-        (isScrollable ? widget.scrollHeight : 0);
-    if (constraints.width < widget.whiteHeight) {
+        expand || forScrollBar ? constraints.width : (whiteWidth);
+    final wButtonW = pianoWidth / noteCount;
+    final bButtonW = wButtonW / blackWidthRatio;
+    var wButtonH = (forScrollBar ? scrollHeight : whiteHeight) -
+        (isScrollable ? scrollHeight : 0);
+    if (constraints.width < whiteHeight) {
       wButtonH = constraints.width;
     }
     final bButtonH = wButtonH / 1.85;
@@ -91,14 +79,12 @@ class _PianoProState extends State<PianoPro> {
     NoteModel? offsetToNoteModel(Offset offset) {
       if (offset.dx < 0 || offset.dx >= pianoWidth) return null;
       var buttonIndex = offset.dx ~/ wButtonW;
-      var noteIndex = (buttonIndex + widget.firstNoteIndex) % 7;
-      var octave =
-          ((buttonIndex + widget.firstNoteIndex) / 7 + widget.firstOctave)
-              .toInt();
+      var noteIndex = (buttonIndex + firstNoteIndex) % 7;
+      var octave = ((buttonIndex + firstNoteIndex) / 7 + firstOctave).toInt();
       bool isFlat = false;
       if (offset.dy >= bButtonH) {
         return NoteModel(
-            name: NoteNames.generate(widget.noteType)[noteIndex],
+            name: NoteNames.generate(noteType)[noteIndex],
             octave: octave,
             noteIndex: noteIndex,
             isFlat: false);
@@ -110,17 +96,15 @@ class _PianoProState extends State<PianoPro> {
             isFlat = true;
           }
         } else if (offset.dx % wButtonW > wButtonW - bButtonW / 2 &&
-            buttonIndex != widget.noteCount - 1) {
+            buttonIndex != noteCount - 1) {
           ++buttonIndex;
-          noteIndex = (buttonIndex + widget.firstNoteIndex) % 7;
+          noteIndex = (buttonIndex + firstNoteIndex) % 7;
           if (noFlatIndexes.contains(noteIndex)) {
             --buttonIndex;
-            noteIndex = (buttonIndex + widget.firstNoteIndex) % 7;
+            noteIndex = (buttonIndex + firstNoteIndex) % 7;
             isFlat = false;
           } else {
-            octave =
-                ((buttonIndex + widget.firstNoteIndex) / 7 + widget.firstOctave)
-                    .toInt();
+            octave = ((buttonIndex + firstNoteIndex) / 7 + firstOctave).toInt();
             isFlat = true;
           }
         } else {
@@ -128,7 +112,7 @@ class _PianoProState extends State<PianoPro> {
         }
 
         return NoteModel(
-            name: NoteNames.generate(widget.noteType)[noteIndex],
+            name: NoteNames.generate(noteType)[noteIndex],
             octave: octave,
             noteIndex: noteIndex,
             isFlat: isFlat);
@@ -136,9 +120,9 @@ class _PianoProState extends State<PianoPro> {
     }
 
     if (forScrollBar) {
-      var scrollButtonW = widget.whiteWidth / widget.noteCount;
+      var scrollButtonW = whiteWidth / noteCount;
       var noteCountOnScreen = constraints.width / scrollButtonW;
-      var pianoButtonW = (constraints.width / widget.noteCount);
+      var pianoButtonW = (constraints.width / noteCount);
       var scale = scrollButtonW / pianoButtonW;
 
       var scrollWidth = noteCountOnScreen * pianoButtonW;
@@ -147,18 +131,18 @@ class _PianoProState extends State<PianoPro> {
           PianoView(
             showOctaveNumber: false,
             showNames: false,
-            firstNoteOctave: widget.firstOctave,
-            noteType: widget.noteType,
+            firstNoteOctave: firstOctave,
+            noteType: noteType,
             whiteButtonWidth: wButtonW,
             whiteButtonHeight: wButtonH,
             noFlatIndexes: noFlatIndexes,
             blackButtonWidth: bButtonW,
             blackButtonHeight: bButtonH,
-            firstNote: widget.firstNoteIndex,
-            noteCount: widget.noteCount,
+            firstNote: firstNoteIndex,
+            noteCount: noteCount,
           ),
           PianoScrollbar(
-              scrollController: scrollController,
+              scrollController: scroll,
               scrollWidth: scrollWidth,
               constraints: constraints,
               scale: scale,
@@ -171,38 +155,35 @@ class _PianoProState extends State<PianoPro> {
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
         child: Listener(
-            onPointerDown: widget.onTapDown == null
+            onPointerDown: onTapDown == null
                 ? null
                 : (details) {
-                    widget.onTapDown!(offsetToNoteModel(details.localPosition),
+                    onTapDown!(offsetToNoteModel(details.localPosition),
                         details.pointer);
                   },
-            onPointerMove: widget.onTapUpdate == null
+            onPointerMove: onTapUpdate == null
                 ? null
                 : (details) {
-                    widget.onTapUpdate!(
-                        offsetToNoteModel(details.localPosition),
+                    onTapUpdate!(offsetToNoteModel(details.localPosition),
                         details.pointer);
                   },
-            onPointerUp: widget.onTapUp == null
-                ? null
-                : (details) => widget.onTapUp!(details.pointer),
-            onPointerCancel: widget.onTapUp == null
-                ? null
-                : (details) => widget.onTapUp!(details.pointer),
+            onPointerUp:
+                onTapUp == null ? null : (details) => onTapUp!(details.pointer),
+            onPointerCancel:
+                onTapUp == null ? null : (details) => onTapUp!(details.pointer),
             behavior: HitTestBehavior.translucent,
             child: PianoView(
-              showOctaveNumber: widget.showOctave,
-              showNames: widget.showNames,
-              firstNoteOctave: widget.firstOctave,
-              noteType: widget.noteType,
+              showOctaveNumber: showOctave,
+              showNames: showNames,
+              firstNoteOctave: firstOctave,
+              noteType: noteType,
               whiteButtonWidth: wButtonW,
               whiteButtonHeight: wButtonH,
               noFlatIndexes: noFlatIndexes,
               blackButtonWidth: bButtonW,
               blackButtonHeight: bButtonH,
-              firstNote: widget.firstNoteIndex,
-              noteCount: widget.noteCount,
+              firstNote: firstNoteIndex,
+              noteCount: noteCount,
             )),
       );
     }

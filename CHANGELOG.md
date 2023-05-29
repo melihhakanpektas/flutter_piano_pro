@@ -21,3 +21,8 @@
 
 - Octave number fixed
 - midiNoteNumber to NoteModel added
+
+## 0.5.0
+
+- Scroll performance update
+- scrollController field added.

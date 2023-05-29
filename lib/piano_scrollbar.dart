@@ -24,54 +24,60 @@ class _PianoScrollbarState extends State<PianoScrollbar> {
   double scrollPosition = 0.0;
 
   void jumpToScrollPosition(double position) {
-    scrollPosition = position;
-    widget.scrollController.jumpTo(scrollPosition * widget.scale);
+    setState(() {
+      scrollPosition = position;
+    });
+    widget.scrollController.jumpTo(position * widget.scale);
+  }
+
+  void animateToScrollPosition(double position) {
+    setState(() {
+      scrollPosition = position;
+    });
+    widget.scrollController.animateTo(position * widget.scale,
+        duration: const Duration(milliseconds: 200), curve: Curves.ease);
+  }
+
+  void handleDragUpdate(DragUpdateDetails details) {
+    final dx = details.delta.dx;
+    final newPosition = scrollPosition + dx;
+
+    if (newPosition <= 0 && dx <= 0) return;
+
+    if (newPosition + widget.scrollWidth >= widget.constraints.width &&
+        dx >= 0) {
+      jumpToScrollPosition(scrollPosition);
+      return;
+    }
+
+    if (newPosition < 0) {
+      jumpToScrollPosition(0);
+      return;
+    }
+
+    if (newPosition + widget.scrollWidth > widget.constraints.width) {
+      jumpToScrollPosition(widget.constraints.width - widget.scrollWidth);
+      return;
+    }
+
+    jumpToScrollPosition(newPosition);
   }
 
   @override
   Widget build(BuildContext context) {
-    final maxScrollWidth = widget.constraints.width - widget.scrollWidth;
-
     return GestureDetector(
       onHorizontalDragDown: (details) {
         final position = details.localPosition.dx - (widget.scrollWidth / 2);
         if (position <= 0) {
-          jumpToScrollPosition(0);
+          animateToScrollPosition(0);
         } else if (position + widget.scrollWidth >= widget.constraints.width) {
-          jumpToScrollPosition(maxScrollWidth);
+          animateToScrollPosition(
+              widget.constraints.width - widget.scrollWidth);
         } else {
-          scrollPosition = position;
-          jumpToScrollPosition(position);
+          animateToScrollPosition(position);
         }
-        setState(() {});
       },
-      onHorizontalDragUpdate: (details) {
-        final dx = details.delta.dx;
-
-        if (scrollPosition <= 0 && dx <= 0) return;
-
-        if (scrollPosition + widget.scrollWidth >= widget.constraints.width &&
-            dx >= 0) {
-          jumpToScrollPosition(scrollPosition);
-          return;
-        }
-
-        if (scrollPosition + dx < 0) {
-          jumpToScrollPosition(0);
-          return;
-        }
-
-        if (scrollPosition + dx + widget.scrollWidth >
-            widget.constraints.width) {
-          jumpToScrollPosition(widget.constraints.width - widget.scrollWidth);
-          return;
-        }
-
-        setState(() {
-          scrollPosition += dx;
-        });
-        jumpToScrollPosition(scrollPosition);
-      },
+      onHorizontalDragUpdate: handleDragUpdate,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
