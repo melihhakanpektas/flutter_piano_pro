@@ -25,6 +25,7 @@ class PianoPro extends StatelessWidget {
     this.onTapUp,
     this.blackWidthRatio = 2,
     this.scrollHeight = 50,
+    this.buttonColors,
   });
 
   final int noteCount;
@@ -42,6 +43,7 @@ class PianoPro extends StatelessWidget {
   final Function(NoteModel? note, int pointer)? onTapDown;
   final Function(NoteModel? note, int pointer)? onTapUpdate;
   final Function(int pointer)? onTapUp;
+  final Map<int, Color>? buttonColors;
 
   final List<int> noFlatIndexes = [0, 3];
   final bool isPressed = false;
@@ -129,6 +131,7 @@ class PianoPro extends StatelessWidget {
       return Stack(
         children: [
           PianoView(
+            buttonColors: buttonColors,
             showOctaveNumber: false,
             showNames: false,
             firstNoteOctave: firstOctave,
@@ -173,6 +176,7 @@ class PianoPro extends StatelessWidget {
                 onTapUp == null ? null : (details) => onTapUp!(details.pointer),
             behavior: HitTestBehavior.translucent,
             child: PianoView(
+              buttonColors: buttonColors,
               showOctaveNumber: showOctave,
               showNames: showNames,
               firstNoteOctave: firstOctave,

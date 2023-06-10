@@ -5,6 +5,7 @@ import 'package:flutter_piano_pro/note_names.dart';
 class PianoView extends StatelessWidget {
   const PianoView({
     super.key,
+    required this.buttonColors,
     required this.noteType,
     required this.whiteButtonWidth,
     required this.whiteButtonHeight,
@@ -17,6 +18,7 @@ class PianoView extends StatelessWidget {
     required this.showOctaveNumber,
     required this.showNames,
   });
+  final Map<int, Color>? buttonColors;
   final int noteCount;
   final int firstNote;
   final NoteType noteType;
@@ -52,7 +54,8 @@ class PianoView extends StatelessWidget {
                 width: whiteButtonWidth - ((whiteButtonWidth / 100) * 2),
                 height: whiteButtonHeight,
                 decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: buttonColors?[currentNote.midiNoteNumber] ??
+                        Colors.grey,
                     borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(whiteButtonWidth / 7),
                         bottomLeft: Radius.circular(whiteButtonWidth / 7))),
@@ -119,7 +122,8 @@ class PianoView extends StatelessWidget {
                         width: blackButtonWidth - (whiteButtonWidth / 100) * 2,
                         height: blackButtonHeight,
                         decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: buttonColors?[currentNote.midiNoteNumber] ??
+                                Colors.black,
                             borderRadius: BorderRadius.only(
                                 bottomLeft:
                                     Radius.circular(blackButtonWidth / 7),
