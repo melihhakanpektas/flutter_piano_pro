@@ -26,3 +26,7 @@
 
 - Scroll performance update
 - scrollController field added.
+
+## 0.6.0
+
+- animateToScrollPosition method added
