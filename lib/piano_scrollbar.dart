@@ -17,24 +17,34 @@ class PianoScrollbar extends StatefulWidget {
   final double wButtonH;
 
   @override
-  State<PianoScrollbar> createState() => _PianoScrollbarState();
+  State<PianoScrollbar> createState() => PianoScrollbarState();
 }
 
-class _PianoScrollbarState extends State<PianoScrollbar> {
+class PianoScrollbarState extends State<PianoScrollbar> {
   double scrollPosition = 0.0;
 
   void jumpToScrollPosition(double position) {
+    var position0 = position;
+    if (position < 0) position0 = 0;
+    if (position > widget.constraints.width - widget.scrollWidth) {
+      position0 = widget.constraints.width - widget.scrollWidth;
+    }
     setState(() {
-      scrollPosition = position;
+      scrollPosition = position0;
     });
-    widget.scrollController.jumpTo(position * widget.scale);
+    widget.scrollController.jumpTo(position0 * widget.scale);
   }
 
   void animateToScrollPosition(double position) {
+    var position0 = position;
+    if (position < 0) position0 = 0;
+    if (position > widget.constraints.width - widget.scrollWidth) {
+      position0 = widget.constraints.width - widget.scrollWidth;
+    }
     setState(() {
-      scrollPosition = position;
+      scrollPosition = position0;
     });
-    widget.scrollController.animateTo(position * widget.scale,
+    widget.scrollController.animateTo(position0 * widget.scale,
         duration: const Duration(milliseconds: 200), curve: Curves.ease);
   }
 

@@ -10,6 +10,7 @@ import 'package:flutter_piano_pro/piano_view.dart';
 class PianoPro extends StatelessWidget {
   PianoPro({
     super.key,
+    this.scrollBarKey,
     this.scrollController,
     this.noteCount = 7,
     this.whiteWidth = 300,
@@ -27,7 +28,7 @@ class PianoPro extends StatelessWidget {
     this.scrollHeight = 50,
     this.buttonColors,
   });
-
+  final GlobalKey<PianoScrollbarState>? scrollBarKey;
   final int noteCount;
   final double whiteWidth;
   final bool expand;
@@ -145,6 +146,7 @@ class PianoPro extends StatelessWidget {
             noteCount: noteCount,
           ),
           PianoScrollbar(
+              key: scrollBarKey,
               scrollController: scroll,
               scrollWidth: scrollWidth,
               constraints: constraints,

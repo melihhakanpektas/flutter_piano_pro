@@ -3,6 +3,7 @@ import 'package:flutter_midi_pro/flutter_midi_pro.dart';
 import 'package:flutter_piano_pro/flutter_piano_pro.dart';
 import 'package:flutter_piano_pro/note_model.dart';
 import 'package:flutter_piano_pro/note_names.dart';
+import 'package:flutter_piano_pro/piano_scrollbar.dart';
 
 void main() {
   runApp(const MainApp());
@@ -29,6 +30,11 @@ class _MainAppState extends State<MainApp> {
   Map<int, NoteModel> pointerAndNote = {};
   String sf2Path = 'assets/tight_piano.sf2';
   final _midi = MidiPro();
+  final scrollBarKey = GlobalKey<PianoScrollbarState>();
+
+  void animateToScrollPosition(double position) {
+    scrollBarKey.currentState?.animateToScrollPosition(position);
+  }
 
   void play(int midi, {int velocity = 127}) {
     _midi.playMidiNote(midi: midi, velocity: velocity);
@@ -51,7 +57,11 @@ class _MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.brown),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Flutter Piano Pro')),
+        appBar: AppBar(actions: [
+          IconButton(
+              onPressed: () => animateToScrollPosition(400),
+              icon: Icon(Icons.abc))
+        ], title: const Text('Flutter Piano Pro')),
         body: ListView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
@@ -254,6 +264,7 @@ class _MainAppState extends State<MainApp> {
               ],
             ),
             PianoPro(
+                scrollBarKey: scrollBarKey,
                 onTapDown: (NoteModel? note, int tapId) {
                   if (note == null) return;
                   play(note.midiNoteNumber);
