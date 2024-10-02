@@ -47,7 +47,6 @@ class PianoPro extends StatelessWidget {
   final Map<int, Color>? buttonColors;
 
   final List<int> noFlatIndexes = [0, 3];
-  final bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +65,12 @@ class PianoPro extends StatelessWidget {
     });
   }
 
-  Widget pianoWidget(Size constraints, bool isScrollable, bool forScrollBar,
-      ScrollController scroll) {
-    final pianoWidth =
-        expand || forScrollBar ? constraints.width : (whiteWidth);
+  Widget pianoWidget(
+      Size constraints, bool isScrollable, bool forScrollBar, ScrollController scroll) {
+    final pianoWidth = expand || forScrollBar ? constraints.width : (whiteWidth);
     final wButtonW = pianoWidth / noteCount;
     final bButtonW = wButtonW / blackWidthRatio;
-    var wButtonH = (forScrollBar ? scrollHeight : whiteHeight) -
-        (isScrollable ? scrollHeight : 0);
+    var wButtonH = (forScrollBar ? scrollHeight : whiteHeight) - (isScrollable ? scrollHeight : 0);
     if (constraints.width < whiteHeight) {
       wButtonH = constraints.width;
     }
@@ -87,10 +84,7 @@ class PianoPro extends StatelessWidget {
       bool isFlat = false;
       if (offset.dy >= bButtonH) {
         return NoteModel(
-            name: noteType.notes[noteIndex],
-            octave: octave,
-            noteIndex: noteIndex,
-            isFlat: false);
+            name: noteType.notes[noteIndex], octave: octave, noteIndex: noteIndex, isFlat: false);
       } else {
         if (offset.dx % wButtonW < bButtonW / 2) {
           if (noFlatIndexes.contains(noteIndex)) {
@@ -98,8 +92,7 @@ class PianoPro extends StatelessWidget {
           } else {
             isFlat = true;
           }
-        } else if (offset.dx % wButtonW > wButtonW - bButtonW / 2 &&
-            buttonIndex != noteCount - 1) {
+        } else if (offset.dx % wButtonW > wButtonW - bButtonW / 2 && buttonIndex != noteCount - 1) {
           ++buttonIndex;
           noteIndex = (buttonIndex + firstNoteIndex) % 7;
           if (noFlatIndexes.contains(noteIndex)) {
@@ -115,10 +108,7 @@ class PianoPro extends StatelessWidget {
         }
 
         return NoteModel(
-            name: noteType.notes[noteIndex],
-            octave: octave,
-            noteIndex: noteIndex,
-            isFlat: isFlat);
+            name: noteType.notes[noteIndex], octave: octave, noteIndex: noteIndex, isFlat: isFlat);
       }
     }
 
@@ -163,19 +153,15 @@ class PianoPro extends StatelessWidget {
             onPointerDown: onTapDown == null
                 ? null
                 : (details) {
-                    onTapDown!(offsetToNoteModel(details.localPosition),
-                        details.pointer);
+                    onTapDown!(offsetToNoteModel(details.localPosition), details.pointer);
                   },
             onPointerMove: onTapUpdate == null
                 ? null
                 : (details) {
-                    onTapUpdate!(offsetToNoteModel(details.localPosition),
-                        details.pointer);
+                    onTapUpdate!(offsetToNoteModel(details.localPosition), details.pointer);
                   },
-            onPointerUp:
-                onTapUp == null ? null : (details) => onTapUp!(details.pointer),
-            onPointerCancel:
-                onTapUp == null ? null : (details) => onTapUp!(details.pointer),
+            onPointerUp: onTapUp == null ? null : (details) => onTapUp!(details.pointer),
+            onPointerCancel: onTapUp == null ? null : (details) => onTapUp!(details.pointer),
             behavior: HitTestBehavior.translucent,
             child: PianoView(
               buttonColors: buttonColors,

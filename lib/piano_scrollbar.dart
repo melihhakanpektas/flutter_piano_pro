@@ -54,8 +54,7 @@ class PianoScrollbarState extends State<PianoScrollbar> {
 
     if (newPosition <= 0 && dx <= 0) return;
 
-    if (newPosition + widget.scrollWidth >= widget.constraints.width &&
-        dx >= 0) {
+    if (newPosition + widget.scrollWidth >= widget.constraints.width && dx >= 0) {
       jumpToScrollPosition(scrollPosition);
       return;
     }
@@ -73,20 +72,21 @@ class PianoScrollbarState extends State<PianoScrollbar> {
     jumpToScrollPosition(newPosition);
   }
 
+  void handleDragDown(details) {
+    final position = details.localPosition.dx - (widget.scrollWidth / 2);
+    if (position <= 0) {
+      animateToScrollPosition(0);
+    } else if (position + widget.scrollWidth >= widget.constraints.width) {
+      animateToScrollPosition(widget.constraints.width - widget.scrollWidth);
+    } else {
+      animateToScrollPosition(position);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onHorizontalDragDown: (details) {
-        final position = details.localPosition.dx - (widget.scrollWidth / 2);
-        if (position <= 0) {
-          animateToScrollPosition(0);
-        } else if (position + widget.scrollWidth >= widget.constraints.width) {
-          animateToScrollPosition(
-              widget.constraints.width - widget.scrollWidth);
-        } else {
-          animateToScrollPosition(position);
-        }
-      },
+      onHorizontalDragDown: handleDragDown,
       onHorizontalDragUpdate: handleDragUpdate,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -103,8 +103,7 @@ class PianoScrollbarState extends State<PianoScrollbar> {
           ),
           Container(
             color: Colors.black.withOpacity(0.5),
-            width: widget.constraints.width -
-                (scrollPosition + widget.scrollWidth),
+            width: widget.constraints.width - (scrollPosition + widget.scrollWidth),
             height: widget.wButtonH,
           ),
         ],
